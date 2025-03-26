@@ -1,33 +1,57 @@
+; Target: ATTiny2313a
+; 
+; # Intro
+; Peripheral: eight 7 Segment Displays (kcsc02-105) 
+; KCSC02-105 Are ultra-red 7 segment displays with common cathode (1.9V required with 30ma forward current)
+; With a 5V supply we use ~200/300 ohm resistors in series which each segment
+; 
+; # Driving multiple 7 segment displays
+; Normally you'd have a shift register that is being fed data serially to output it in parallel for 7 segment displays to collect. Then we can pick which
+; 7sd should accept data by pulling its common cathode low, while keeping other common cathodes high (it's probably not the best way to do it but hey, what
+; do i know :3c)
+;
+; # Explanation on how we drive multiple 7sd using one chip without a SR
+; Halfway through development it turned out that USI (universal serial interface) of ATtiny2313 is just too slow to work with a shift-register to
+; drive multiple 7 segment displays.
+;
+; Luckily, it turned out that ATTiny2313 has enough pins to both send the data to our seven segment displays and to pick which 7sd should collect said data.
+; For picking a 7sd we use PORTB, (PB7-PB0) where logical ONE for a given bit means that the display associated with that pin is OFF, while logical ZERO
+; means that a given display is ON and accepting data (look at disp_0 - disp_1)
+;
+; For data we use PORTD (PD0-PD6 (we only need 7 bits)) where we simply output data in parallel. 
+;
+
 .include "tn2313def.inc"
 
 .def 	char_reg	= r16
 .def	disp_reg	= r17
 .def	word_idx	= r18
-.equ	disp_0	= 0b01111111
-.equ 	disp_1  = 0b10111111
-.equ 	disp_2  = 0b11011111
-.equ	disp_3	= 0b11101111
-.equ	disp_4	= 0b11110111
-.equ	disp_5	= 0b11111011
-.equ	disp_6	= 0b11111101
-.equ	disp_7	= 0b11111110
-.equ	a	= 0b11011111
-.equ	b	= 0b11111100
-.equ	c	= 0b11100110
-.equ	d	= 0b11111001
-.equ	e	= 0b11101110
-.equ	f	= 0b01001110
-.equ 	h	= 0b11011101
-.equ	i	= 0b00010001
-.equ 	j	= 0b00110001
-.equ	l	= 0b01100100
-.equ	n	= 0b01011000
-.equ 	o	= 0b01111000
-.equ	u	= 0b01110000
-.equ	v	= 0b01110000
-.equ 	p	= 0b11001111
-.equ	r 	= 0b11001000
-.equ	s	= 0b10111110
+.equ 	tim1_reset_value	= 230
+.equ	disp_0			= 0b01111111
+.equ 	disp_1  		= 0b10111111
+.equ 	disp_2  		= 0b11011111
+.equ	disp_3			= 0b11101111
+.equ	disp_4			= 0b11110111
+.equ	disp_5			= 0b11111011
+.equ	disp_6			= 0b11111101
+.equ	disp_7			= 0b11111110
+.equ	a			= 0b11011111
+.equ	b			= 0b11111100
+.equ	c			= 0b11100110
+.equ	d			= 0b11111001
+.equ	e			= 0b11101110
+.equ	f			= 0b01001110
+.equ 	h			= 0b11011101
+.equ	i			= 0b00010001
+.equ 	j			= 0b00110001
+.equ	l			= 0b01100100
+.equ	n			= 0b01011000
+.equ 	o			= 0b01111000
+.equ	u			= 0b01110000
+.equ	v			= 0b01110000
+.equ 	p			= 0b11001111
+.equ	r 			= 0b11001000
+.equ	s			= 0b10111110
 
 .org 0x00  					; so yeah lets jump to main :3
 	rjmp main
@@ -40,7 +64,7 @@ TIM1_COMPA_ISR:  				; this ISR probably does way too much? but it should be oka
 	in r19, PORTA
 	eor r19, r20  				; blink the LED every time the ISR is called
 	out PORTA, r19
-	ldi r16, 220  				; value to reset the timer with, can be adjusted depending on the delay we want
+	ldi r16, tim1_reset_value  		; value to reset the timer with, can be adjusted depending on the delay we want
 	out TCNT1H, r16
 	out TCNT1L, r16
 	inc word_idx  				; we shall USE that value to pick which words we display on 7 segment displays :3c
