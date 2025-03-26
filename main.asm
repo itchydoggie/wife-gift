@@ -152,13 +152,56 @@ send_r:
 	rcall send_character
 	ret
 
+send_space:
+	ldi char_reg, 0b00000000
+	rcall send_character
+	ret
+
 send_s:
 	ldi char_reg, s
 	rcall send_character
 	ret
 
-loop:
+send_lol:
 	ldi disp_reg, disp_0
-	ldi char_reg, r
-	rcall send_character
+	rcall send_l
+	ldi disp_reg, disp_1
+	rcall send_o
+	ldi disp_reg, disp_2
+	rcall send_l
+	ret
+
+send_hi_love:
+	ldi disp_reg, disp_0
+	rcall send_h
+	ldi disp_reg, disp_1
+	rcall send_i
+	ldi disp_reg, disp_2
+	rcall send_space
+	ldi disp_reg, disp_3
+	rcall send_l
+	ldi disp_reg, disp_4
+	rcall send_o
+	ldi disp_reg, disp_5
+	rcall send_v
+	ldi disp_reg, disp_6
+	rcall send_e
+	ret
+
+loop:
+	cpi word_idx, 1
+	breq send_lol_br
+	cpi word_idx, 2
+	breq send_hi_br
+	cpi word_idx, 3
+	breq reset
+send_lol_br:
+	rcall send_lol
+	rjmp end
+send_hi_br:
+	rcall send_hi_love
+	rjmp end
+reset:
+	ldi word_idx, 0
+end:
 	rjmp loop
