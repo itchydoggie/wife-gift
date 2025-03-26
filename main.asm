@@ -1,5 +1,15 @@
 ; Target: ATTiny2313a
-; 
+;          __
+;         /  \
+;        / ..|\
+;       (_\  |_)
+;       /  \@'
+;      /     \
+;  _  /  `   |
+; \\/  \  | _\
+;  \   /_ || \\_
+;   \____)|_) \_)
+;
 ; # Intro
 ; Peripheral: eight 7 Segment Displays (kcsc02-105) 
 ; KCSC02-105 Are ultra-red 7 segment displays with common cathode (1.9V required with 30ma forward current)
@@ -56,7 +66,7 @@
 .org 0x00  					; so yeah lets jump to main :3
 	rjmp main
 
-.org TIM1_COMPA_ISR  					; isr vector for compare match for 16 bit timer
+.org TIM1_COMPA_ISR  				; isr vector for compare match for 16 bit timer
 	ldi r20, 0b00000010
 	in r19, PORTA
 	eor r19, r20  				; blink the LED every time the ISR is called
