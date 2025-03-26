@@ -19,13 +19,13 @@
 ; means that a given display is ON and accepting data (look at disp_0 - disp_1)
 ;
 ; For data we use PORTD (PD0-PD6 (we only need 7 bits)) where we simply output data in parallel. 
-;
 
 .include "tn2313def.inc"
 
-.def 	char_reg	= r16
-.def	disp_reg	= r17
-.def	word_idx	= r18
+.def 	char_reg		= r16
+.def	disp_reg		= r17
+.def	word_idx		= r18
+.equ	TIM1_COMPA_ISR		= 0x0004
 .equ 	tim1_reset_value	= 230
 .equ	disp_0			= 0b01111111
 .equ 	disp_1  		= 0b10111111
@@ -56,10 +56,7 @@
 .org 0x00  					; so yeah lets jump to main :3
 	rjmp main
 
-.org 0x0004  					; isr vector for compare match for 16 bit timer
-	rjmp TIM1_COMPA_ISR 
-
-TIM1_COMPA_ISR:  				; this ISR probably does way too much? but it should be okay for this purpose lmao
+.org TIM1_COMPA_ISR  					; isr vector for compare match for 16 bit timer
 	ldi r20, 0b00000010
 	in r19, PORTA
 	eor r19, r20  				; blink the LED every time the ISR is called
