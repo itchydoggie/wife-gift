@@ -35,6 +35,9 @@
 .def 	char_reg		= r16
 .def	disp_reg		= r17
 .def	word_idx		= r18
+.def	disp_idx		= r21
+.equ	disp_idx_mask		= 0b11111111
+.equ	disp_idx_init_vl	= 0b01111111
 .equ	TIM1_COMPA_ISR		= 0x0004
 .equ 	tim1_reset_value	= 230
 .equ	disp_0			= 0b01111111
@@ -102,6 +105,7 @@ send_character:
 	out PORTD, char_reg
 	out PORTB, disp_reg
 	rcall clear_displays
+	asr disp_idx
 	ret
 
 send_a:
@@ -220,17 +224,8 @@ send_hi_love:
 	ret
 
 loop:
-	cpi word_idx, 1
-	breq send_lol_br
-	cpi word_idx, 2
-	breq send_hi_br
 	cpi word_idx, 3
 	breq reset
-send_lol_br:
-	rcall send_lol
-	rjmp end
-send_hi_br:
-	rcall send_hi_love
 	rjmp end
 reset:
 	ldi word_idx, 0
