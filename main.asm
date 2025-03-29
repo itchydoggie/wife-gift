@@ -39,7 +39,7 @@
 .equ	disp_idx_mask		= 0b11111111
 .equ	disp_idx_init_vl	= 0b01111111
 .equ	TIM1_COMPA_ISR		= 0x0004
-.equ 	tim1_reset_value	= 230
+.equ 	tim1_reset_value	= 220		; smaller value = bigger delay
 .equ	disp_0			= 0b01111111
 .equ 	disp_1  		= 0b10111111
 .equ 	disp_2  		= 0b11011111
@@ -65,6 +65,8 @@
 .equ 	p			= 0b11001111
 .equ	r 			= 0b11001000
 .equ	s			= 0b10111110
+.equ	y			= 0b00011101
+.equ	two			= 0b11101011
 
 .org 0x00  					; so yeah lets jump to main :3
 	rjmp main
@@ -187,23 +189,24 @@ send_r:
 	rcall send_character
 	ret
 
-send_space:
-	ldi char_reg, 0b00000000
-	rcall send_character
-	ret
-
 send_s:
 	ldi char_reg, s
 	rcall send_character
 	ret
 
-send_lol:
-	ldi disp_reg, disp_0
-	rcall send_l
-	ldi disp_reg, disp_1
-	rcall send_o
-	ldi disp_reg, disp_2
-	rcall send_l
+send_y:
+	ldi char_reg, y
+	rcall send_character
+	ret
+
+send_2:
+	ldi char_reg, two
+	rcall send_character
+	ret
+
+send_space:
+	ldi char_reg, 0b00000000
+	rcall send_character
 	ret
 
 send_hi_love:
@@ -223,9 +226,260 @@ send_hi_love:
 	rcall send_e
 	ret
 
+send_hii:
+	ldi disp_reg, disp_0
+	rcall send_h
+	ldi disp_reg, disp_1
+	rcall send_i
+	ldi disp_reg, disp_2
+	rcall send_i
+	ldi disp_reg, disp_3
+	rcall send_i
+	ldi disp_reg, disp_4
+	rcall send_i
+	ldi disp_reg, disp_5
+	rcall send_i
+	ldi disp_reg, disp_6
+	rcall send_i
+	ret
+
+send_blank:
+	ldi disp_reg, disp_0
+	rcall send_space
+	ldi disp_reg, disp_1
+	rcall send_space
+	ldi disp_reg, disp_2
+	rcall send_space
+	ldi disp_reg, disp_3
+	rcall send_space
+	ldi disp_reg, disp_4
+	rcall send_space
+	ldi disp_reg, disp_5
+	rcall send_space
+	ldi disp_reg, disp_6
+	rcall send_space
+	ret
+
+send_i_love:
+	ldi disp_reg, disp_0
+	rcall send_i
+	ldi disp_reg, disp_1
+	rcall send_space
+	ldi disp_reg, disp_2
+	rcall send_l
+	ldi disp_reg, disp_3
+	rcall send_o
+	ldi disp_reg, disp_4
+	rcall send_v
+	ldi disp_reg, disp_5
+	rcall send_e
+	ldi disp_reg, disp_6
+	rcall send_space
+	ret
+
+send_you:
+	ldi disp_reg, disp_0
+	rcall send_y
+	ldi disp_reg, disp_1
+	rcall send_o
+	ldi disp_reg, disp_2
+	rcall send_u
+	ldi disp_reg, disp_3
+	rcall send_space
+	ldi disp_reg, disp_4
+	rcall send_space
+	ldi disp_reg, disp_5
+	rcall send_space
+	ldi disp_reg, disp_6
+	rcall send_space
+	ret
+
+send_so_uh:
+	ldi disp_reg, disp_0
+	rcall send_s
+	ldi disp_reg, disp_1
+	rcall send_o
+	ldi disp_reg, disp_2
+	rcall send_space
+	ldi disp_reg, disp_3
+	rcall send_u
+	ldi disp_reg, disp_4
+	rcall send_h
+	ldi disp_reg, disp_5
+	rcall send_h
+	ldi disp_reg, disp_6
+	rcall send_h
+	ret
+
+send_22_huh:
+	ldi disp_reg, disp_0
+	rcall send_2
+	ldi disp_reg, disp_1
+	rcall send_2
+	ldi disp_reg, disp_2
+	rcall send_space
+	ldi disp_reg, disp_3
+	rcall send_h
+	ldi disp_reg, disp_4
+	rcall send_u
+	ldi disp_reg, disp_5
+	rcall send_h
+	ldi disp_reg, disp_6
+	rcall send_space
+	ret
+
+send_so:
+	ldi disp_reg, disp_0
+	rcall send_s
+	ldi disp_reg, disp_1
+	rcall send_o
+	ldi disp_reg, disp_2
+	rcall send_o
+	ldi disp_reg, disp_3
+	rcall send_o
+	ldi disp_reg, disp_4
+	rcall send_o
+	ldi disp_reg, disp_5
+	rcall send_o
+	ldi disp_reg, disp_6
+	rcall send_o
+	ret
+
+send_have_a:
+	ldi disp_reg, disp_0
+	rcall send_h
+	ldi disp_reg, disp_1
+	rcall send_a
+	ldi disp_reg, disp_2
+	rcall send_v
+	ldi disp_reg, disp_3
+	rcall send_e
+	ldi disp_reg, disp_4
+	rcall send_space
+	ldi disp_reg, disp_5
+	rcall send_a
+	ldi disp_reg, disp_6
+	rcall send_space
+	ret
+
+send_good:
+	ldi disp_reg, disp_0
+	rcall send_r
+	ldi disp_reg, disp_1
+	rcall send_o
+	ldi disp_reg, disp_2
+	rcall send_o
+	ldi disp_reg, disp_3
+	rcall send_d
+	ldi disp_reg, disp_4
+	rcall send_space
+	ldi disp_reg, disp_5
+	rcall send_space
+	ldi disp_reg, disp_6
+	rcall send_space
+	ret
+
+send_day:
+	ldi disp_reg, disp_0
+	rcall send_d
+	ldi disp_reg, disp_1
+	rcall send_a
+	ldi disp_reg, disp_2
+	rcall send_y
+	ldi disp_reg, disp_3
+	rcall send_space
+	ldi disp_reg, disp_4
+	rcall send_space
+	ldi disp_reg, disp_5
+	rcall send_space
+	ldi disp_reg, disp_6
+	rcall send_space
+	ret
+
+; We can probably manipulate the TCNT1H and TCNT1L registers after each iteration to change delays between each displays
+; This would require us to remove that from the ISR
+; Display following text:
+; Hi love
+; Hiiiii
+; I love
+; you
+; <BLANK>
+; so uhh
+; 22 huh
+; <BLANK>
+; soooo
+; have a
+; good
+; day
+; i love
+; you
+
 loop:
+	cpi word_idx, 1
+	breq hi
+	cpi word_idx, 2
+	breq hii
 	cpi word_idx, 3
+	breq ilove
+	cpi word_idx, 4
+	breq you
+	cpi word_idx, 5
+	breq blank
+	cpi word_idx, 6
+	breq so_uh
+	cpi word_idx, 7
+	breq tt_huh
+	cpi word_idx, 8
+	breq blank
+	cpi word_idx, 9
+	breq so
+	cpi word_idx, 10
+	breq have
+	cpi word_idx, 11
+	breq good
+	cpi word_idx, 12
+	breq day
+	cpi word_idx, 13
+	breq blank
+	cpi word_idx, 14
+	breq ilove
+	cpi word_idx, 15
+	breq you
+	cpi word_idx, 16
 	breq reset
+	rjmp end
+hi:
+	rcall send_hi_love
+	rjmp end
+hii:
+	rcall send_hii
+	rjmp end
+ilove:
+	rcall send_i_love
+	rjmp end
+you:
+	rcall send_you
+	rjmp end
+blank:
+	rcall send_blank
+	rjmp end
+so_uh:
+	rcall send_so_uh
+	rjmp end
+tt_huh:
+	rcall send_22_huh
+	rjmp end
+so:
+	rcall send_so
+	rjmp end
+have:
+	rcall send_have_a
+	rjmp end
+good:
+	rcall send_good
+	rjmp end
+day:
+	rcall send_day
 	rjmp end
 reset:
 	ldi word_idx, 0
