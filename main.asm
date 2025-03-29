@@ -1,3 +1,8 @@
+; 
+; THIS IS A HORRIBLE IMPLEMENTATION OF WHATEVER IM TRYING TO DO HERE
+; It was done this way mostly because of my inexperience in raw AVR assembly, and also because of lack of time 
+; :3
+;
 ; Target: ATTiny2313a
 ;          __
 ;         /  \
